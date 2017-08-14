@@ -1,7 +1,7 @@
 development:
   clients:
     default:
-      database: myapp_development
+      database: capstone_demoapp_development
       hosts:
         - <%= ENV['MONGO_HOST'] ||= "localhost:27017" %>
       options:
@@ -9,7 +9,7 @@ development:
 test:
   clients:
     default:
-      database: myapp_test
+      database: capstone_demoapp_test
       hosts:
         - <%= ENV['MONGO_HOST'] ||= "localhost:27017" %>
       options:
