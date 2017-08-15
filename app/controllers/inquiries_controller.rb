@@ -1,6 +1,6 @@
 class InquiriesController < ApplicationController
   before_action :set_inquiry, only: [:show, :update, :destroy]
-  before_action :fake_auth
+
   before_action :authenticate_user!, only: [:create, :update, :destroy]
 
   after_action :verify_authorized
@@ -9,13 +9,13 @@ class InquiriesController < ApplicationController
   include ActionController::Helpers
   helper ThingsHelper
 
-  def fake_auth
+  #before_action :fake_auth
+  #def fake_auth
     # id aus http header ?
-    @current_user = User.find(3)
-    pp @current_user
-    sign_in @current_user
-  end
-
+  #  @current_user = User.find(3)
+ #   pp @current_user
+  #  sign_in @current_user
+  #end
 
   # GET /inquiries
   # GET /inquiries.json
