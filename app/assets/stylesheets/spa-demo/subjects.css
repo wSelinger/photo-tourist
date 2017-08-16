@@ -2,12 +2,15 @@
 form.thing-form .id,
 div.thing-list .id,
 form.image-form .id,
-div.image-list .id {
+div.image-list .id,
+form.inquiry-form .id,
+div.inquiry-list .id {
   display: none;
 }
 
 sd-image-editor form,
-sd-thing-editor form {
+sd-thing-editor form,
+sd-inquiry-editor form {
   padding-left: 15px;
   padding-right: 15px;
 }

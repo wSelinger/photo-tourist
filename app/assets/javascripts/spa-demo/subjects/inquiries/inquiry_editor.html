@@ -1,0 +1,66 @@
+<form class="inquiry-form row" name="inquiryform">
+  <span class="inquiry_id id">{{$ctrl.item.id}}</span>
+  <span class="invalid">{{$ctrl.item.errors.full_messages}}</span>
+
+  <div class="inquiry-title row col-lg-12">
+    <label class="col-xs-3">Title:</label>
+    <input class="col-xs-9"
+           name="inquiry-title"
+           ng-model="$ctrl.item.title"
+           ng-readonly="$ctrl.item.id && !$ctrl.authz.canUpdateOrganizerFields"
+           maxlength="80"
+           pattern=".{3,}" title="3 character minimum for Title"/>
+    <span class="invalid">{{$ctrl.item.errors.name}}</span>
+  </div>
+
+  <div class="inquiry-title row col-lg-12">
+    <label class="col-xs-3">Description:</label>
+    <textarea class="col-xs-9"
+           name="inquiry-description"
+           rows="5"
+           cols="80"
+           ng-model="$ctrl.item.description"
+           ng-readonly="$ctrl.item.id && !$ctrl.authz.canUpdateOrganizerFields"
+           maxlength="80"/>
+    <span class="invalid">{{$ctrl.item.errors.name}}</span>
+  </div>
+
+  <div class="inquiry-internal_notes row col-lg-12" ng-show="$ctrl.item.id && $ctrl.authz.canUpdateInternalFields">
+    <label class="col-xs-3">Internal notes:</label>
+    <textarea class="col-xs-9"
+           name="inquiry-internal_notes"
+           rows="3"
+           cols="80"
+           ng-model="$ctrl.item.internal_notes"
+           ng-readonly="!$ctrl.authz.canUpdateInternalFields"
+           maxlength="80"/>
+    <span class="invalid">{{$ctrl.item.errors.name}}</span>
+  </div>
+
+  <div class="inquiry-controls">
+    <span ng-show="$ctrl.authz.canCreate">
+      <button name="inquiry-create"
+              ng-show="!$ctrl.item.id && $ctrl.authz.canCreate"
+              type="submit"
+              ng-disabled="inquiryform.$invalid"
+              ng-click="$ctrl.create()">Create Inquiry</button>
+
+      <span ng-show="$ctrl.item.id">
+        <button name="inquiry-update"
+                type="submit"
+                ng-show="$ctrl.authz.canUpdate"
+                ng-disabled="!inquiryform.$dirty"
+                ng-click="$ctrl.update()">Update Inquiry</button>
+        <button name="image-delete"
+                type="submit"
+                ng-show="$ctrl.authz.canDelete"
+                ng-click="$ctrl.remove()">Delete Inquiry</button>
+      </span>
+    </span>
+    <button name="image-clear"
+            type="submit"
+            ng-show="$ctrl.item.id || inquiryform.$dirty"
+            ng-click="$ctrl.clear()">Clear Inquiry</button>
+  </div>
+
+</form>

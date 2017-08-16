@@ -6,7 +6,7 @@
     .config(RouterFunction);
 
   RouterFunction.$inject = ["$stateProvider",
-                            "$urlRouterProvider", 
+                            "$urlRouterProvider",
                             "spa-demo.config.APP_CONFIG"];
 
   function RouterFunction($stateProvider, $urlRouterProvider, APP_CONFIG) {
@@ -21,7 +21,7 @@
       url: "/signup",
       templateUrl: APP_CONFIG.signup_page_html
     })
-    .state("authn",{ 
+    .state("authn",{
       url: "/authn",
       templateUrl: APP_CONFIG.authn_page_html
     })
@@ -33,7 +33,11 @@
       url: "/things/:id",
       templateUrl: APP_CONFIG.things_page_html
     })
-    ; 
+    .state("inquiries",{
+      url: "/inquiries/:id",
+      templateUrl: APP_CONFIG.inquiries_page_html
+    })
+    ;
 
     //$urlRouterProvider.otherwise("/"); eliminate default route
   }

@@ -31,7 +31,7 @@
       return true;
     };
     BasePolicy.prototype.canUpdate = function(item) {
-      //console.log("BasePolicy.canUpdate", item);
+      console.log("BasePolicy.canUpdate", item);
       if (!item) {
         return false;
       } else {

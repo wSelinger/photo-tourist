@@ -9,7 +9,7 @@ class InquiryPolicy < ApplicationPolicy
     @user
   end
   def update?
-    organizer?
+    organizer_or_admin?
   end
   def destroy?
     organizer_or_admin?
@@ -27,8 +27,13 @@ class InquiryPolicy < ApplicationPolicy
       end
     end
 
+    def user_roles
+      join_roles = "left join roles ro on ro.mname = 'Inquiry' and ro.mid=Inquiries.id and ro.user_id = #{@user.id}"
+      scope.select("Inquiries.*, ro.role_name").joins(join_roles)
+    end
+
     def resolve
-      filter
+      user_roles
     end
   end
 end
