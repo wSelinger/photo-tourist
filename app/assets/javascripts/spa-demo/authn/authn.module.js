@@ -3,6 +3,8 @@
 
   angular
     .module("spa-demo.authn", [
-      "ng-token-auth"
+      "ng-token-auth",
+      "spa-demo.layout",
+      "spa-demo.subjects"
     ]);
 })();

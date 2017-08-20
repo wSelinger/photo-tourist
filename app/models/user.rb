@@ -5,9 +5,11 @@ class User < ActiveRecord::Base
           #:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  delegate :url_helpers, to: 'Rails.application.routes'
+
   has_many :roles, inverse_of: :user, dependent: :destroy
 
-  def has_role(role_list, mname=nil, mid=nil) 
+  def has_role(role_list, mname=nil, mid=nil)
     role_names=roles.relevant(mname, mid).map {|r| r.role_name}
     (role_names & role_list).any?
   end
@@ -31,5 +33,16 @@ class User < ActiveRecord::Base
 
   def is_admin?
      roles.where(:role_name=>Role::ADMIN).exists?
+  end
+
+  # override devise_token_auth std. behavior
+  def token_validation_response
+    self.as_json(except: [
+      :tokens, :created_at, :updated_at, :image_id
+    ], methods: :image_url)
+  end
+
+  def image_url
+    url_helpers.image_content_url(image_id, :only_path => true) if image_id
   end
 end

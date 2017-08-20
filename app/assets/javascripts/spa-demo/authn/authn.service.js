@@ -14,6 +14,7 @@
     service.getCurrentUser = getCurrentUser;
     service.getCurrentUserName = getCurrentUserName;
     service.getCurrentUserId = getCurrentUserId;
+    service.getCurrentUserImageUrl = getCurrentUserImageUrl;
     service.login = login;
     service.logout = logout;
 
@@ -39,6 +40,9 @@
     function getCurrentUserId() {
       return service.user!=null ? service.user.id : null;
     }
+    function getCurrentUserImageUrl() {
+      return service.user!=null ? service.user.image_url : null;
+    }
     function getCurrentUser() {
       return service.user;
     }
@@ -57,11 +61,11 @@
           deferred.resolve(response);
         },
         function(response){
-          var formatted_errors = { errors: { 
-            full_messages: response.errors 
+          var formatted_errors = { errors: {
+            full_messages: response.errors
             }
           };
-          console.log("login failure", response);            
+          console.log("login failure", response);
           deferred.reject(formatted_errors);
         });
 
@@ -79,7 +83,7 @@
         function(response){
           service.user = null;
           console.log("logout failure", response);
-          alert(response.status + ":" + response.statusText);            
+          alert(response.status + ":" + response.statusText);
         });
       return result;
     }
