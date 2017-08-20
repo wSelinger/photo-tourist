@@ -61,10 +61,14 @@ namespace :ptourist do
     url="#{BASE_URL}/#{img[:path]}"
     puts "downloading #{url}"
     contents = open(url,{ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
-    original_content=ImageContent.new(:image_id=>img[:image].id,
+    create_image_content_stream img[:image], contents
+  end
+
+  def create_image_content_stream image, contents
+    original_content=ImageContent.new(:image_id=>image.id,
                                       :content_type=>"image/jpeg",
                                       :content=>BSON::Binary.new(contents))
-    ImageContentCreator.new(img[:image], original_content).build_contents.save!
+    ImageContentCreator.new(image, original_content).build_contents.save!
   end
 
   def create_thing thing, organizer, members, images
@@ -89,8 +93,9 @@ namespace :ptourist do
     end
   end
 
+  # NOTE: :subjects resets the images, user_images after subjects
   desc "reset all data"
-  task reset_all: [:users,:subjects] do
+  task reset_all: [:users,:subjects,:user_images] do
   end
 
   desc "deletes things, images, and links"
@@ -371,6 +376,34 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
 
     puts "#{Thing.count} things created and #{ThingImage.count("distinct thing_id")} with images"
     puts "#{Image.count} images created and #{ThingImage.count("distinct image_id")} for things"
+  end
+
+  def add_user_image user, image_file_name
+    puts "building image for #{user.email}, from #{image_file_name}"
+    image=Image.create(:creator_id=>user.id, :user_id=>user.id)
+
+    user.image_id=image.id
+    puts "User: #{user.email} ImageId: #{user.image_id}"
+    user.save!
+
+    file_content = IO.binread(image_file_name)
+    create_image_content_stream image, file_content
+  end
+
+  desc "user images"
+  task user_images: [:users] do
+    puts "creating user images: #{MEMBERS}"
+    image_files = Dir.glob("lib/tasks/ptourist-sample-data/*.jpg")
+    file_index = 0
+    User.all.each do |user|
+      if file_index < image_files.length
+        add_user_image user, image_files[file_index]
+        file_index += 1
+      else
+        # leave one user per batch without image
+        file_index = 0
+      end
+    end
   end
 
 end

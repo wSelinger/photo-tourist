@@ -44,12 +44,13 @@ class ImagesController < ApplicationController
         original=ImageContent.new(image_content_params)
         contents=ImageContentCreator.new(@image, original).build_contents
         if (contents.save!)
-          role=current_user.add_role(Role::ORGANIZER, @image)
-          @image.user_roles << role.role_name
-          role.save!
           if (@image.user_id)
             current_user.image_id = @image.id
             current_user.save!
+          else
+            role=current_user.add_role(Role::ORGANIZER, @image)
+            @image.user_roles << role.role_name
+            role.save!
           end
           render :show, status: :created, location: @image
         end
