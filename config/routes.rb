@@ -3,9 +3,11 @@ Rails.application.routes.draw do
   get 'authn/whoami', defaults: {format: :json}
   get 'authn/checkme'
 
-  mount_devise_token_auth_for 'User', at: 'auth'
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+    sessions: 'devise_sessions'
+  }
 
-  scope :api, defaults: {format: :json}  do 
+  scope :api, defaults: {format: :json}  do
     resources :foos, except: [:new, :edit]
     resources :bars, except: [:new, :edit]
     resources :images, except: [:new, :edit] do
@@ -17,7 +19,7 @@ Rails.application.routes.draw do
       resources :thing_images, only: [:index, :create, :update, :destroy]
     end
     get "images/:id/content", as: :image_content, controller: :images, action: :content, defaults:{format: :jpg}
-  end      
+  end
 
   get "/client-assets/:name.:format", :to => redirect("/client/client-assets/%{name}.%{format}")
 #  get "/", :to => redirect("/client/index.html")
